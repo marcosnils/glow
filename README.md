@@ -17,7 +17,7 @@ After that you just need to set the following variables in your terminal:
 
 `GLOW_CN_SITE_ID` - Your collected notes site id where you want to publish your notes. 
 
-*Note:* Private notes cannot be visualized given a bug in the API yet to be fixed.
+~*Note:* Private notes cannot be visualized given a bug in the API yet to be fixed.~
 
 Enjoy!
 
