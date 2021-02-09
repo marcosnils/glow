@@ -1,5 +1,28 @@
 # Glow
 
+
+This is a very hacky fork of charm's glow with support for [@collected_notes](https://collectednotes.com) integration.
+
+## Installation
+
+You can `go get` this project or install it via `gobinaries` as follows:
+
+```
+curl -sf https://gobinaries.com/github.com/marcosnils/glow | PREFIX=. sh
+```
+
+After that you just need to set the following variables in your terminal:
+
+`GLOW_CN_AUTH_HEADER` - Your collected notes API `authorization` header value
+`GLOW_CN_SITE_ID` - Your collected notes site id where you want to publish your notes. 
+
+*Note:* Private notes cannot be visualized given a bug in the API yet to be fixed.
+
+Enjoy!
+
+---
+
+
 Render markdown on the CLI, with _pizzazz_!
 
 <p align="center">
