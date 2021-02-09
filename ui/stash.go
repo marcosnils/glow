@@ -1481,7 +1481,7 @@ func getStashMarkdown(id int) (*charm.Markdown, error) {
 	var note struct {
 		Id        int
 		Body      string
-		CreatedAt time.Time
+		CreatedAt time.Time `json:"created_at"`
 		Title     string
 	}
 

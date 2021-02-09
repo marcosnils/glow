@@ -607,6 +607,7 @@ func loadStash(m stashModel) tea.Cmd {
 		}
 		return gotStashMsg(stash)
 	}
+
 }
 
 func getStash(page int) ([]*charm.Markdown, error) {
@@ -626,7 +627,7 @@ func getStash(page int) ([]*charm.Markdown, error) {
 	var notesRes []struct {
 		Id        int
 		Body      string
-		CreatedAt time.Time
+		CreatedAt time.Time `json:"created_at"`
 		Title     string
 	}
 
@@ -800,7 +801,7 @@ func stashMarkDown(note, body string) (*charm.Markdown, error) {
 	var noteRes struct {
 		Id        int
 		Body      string
-		CreatedAt time.Time
+		CreatedAt time.Time `json:"created_at"`
 		Title     string
 	}
 
