@@ -21,8 +21,8 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/charm/ui/common"
 	"github.com/charmbracelet/glamour"
-	"github.com/charmbracelet/glow/ui"
-	"github.com/charmbracelet/glow/utils"
+	"github.com/marcosnils/glow/ui"
+	"github.com/marcosnils/glow/utils"
 )
 
 var (

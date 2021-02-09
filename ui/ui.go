@@ -18,7 +18,7 @@ import (
 	"github.com/charmbracelet/charm/keygen"
 	"github.com/charmbracelet/charm/ui/common"
 	lib "github.com/charmbracelet/charm/ui/common"
-	"github.com/charmbracelet/glow/utils"
+	"github.com/marcosnils/glow/utils"
 	"github.com/muesli/gitcha"
 	te "github.com/muesli/termenv"
 	"github.com/segmentio/ksuid"

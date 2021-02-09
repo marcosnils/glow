@@ -7,7 +7,6 @@ require (
 	github.com/charmbracelet/bubbletea v0.12.4
 	github.com/charmbracelet/charm v0.8.2
 	github.com/charmbracelet/glamour v0.2.1-0.20200829234023-6c0e29c4dae5
-	github.com/charmbracelet/glow v1.3.0
 	github.com/dustin/go-humanize v1.0.1-0.20200219035652-afde56e7acac
 	github.com/mattn/go-runewidth v0.0.10
 	github.com/meowgorithm/babyenv v1.3.0
@@ -23,9 +22,4 @@ require (
 	golang.org/x/crypto v0.0.0-20201221181555-eec23a3978ad
 	golang.org/x/sys v0.0.0-20210113181707-4bcb84eeeb78
 	golang.org/x/text v0.3.2
-)
-
-replace (
-	github.com/charmbracelet/glow => ./
-	github.com/charmbracelet/glow/ui => ./ui
 )
