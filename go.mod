@@ -25,4 +25,7 @@ require (
 	golang.org/x/text v0.3.2
 )
 
-replace github.com/charmbracelet/glow => ./
+replace (
+	github.com/charmbracelet/glow => ./
+	github.com/charmbracelet/glow/ui => ./ui
+)
