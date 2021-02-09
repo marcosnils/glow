@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -1402,7 +1403,7 @@ func loadLocalMarkdown(md *markdown) tea.Cmd {
 
 func deleteStashedItem(cc *charm.Client, id int) tea.Cmd {
 	return func() tea.Msg {
-		err := cc.DeleteMarkdown(id)
+		err := deleteRemoteMarkdown(id)
 		if err != nil {
 			if debug {
 				log.Println("could not delete stashed item:", err)
@@ -1411,6 +1412,25 @@ func deleteStashedItem(cc *charm.Client, id int) tea.Cmd {
 		}
 		return deletedStashedItemMsg(id)
 	}
+}
+
+func deleteRemoteMarkdown(id int) error {
+	req, err := http.NewRequest("DELETE", fmt.Sprintf("https://collectednotes.com/sites/%s/notes/%d", config.CNSiteID, id), nil)
+	if err != nil {
+		return err
+	}
+	req.Header.Add("Authorization", config.CNAuthHeader)
+	req.Header.Add("Accept", "application/json")
+	res, err := http.DefaultClient.Do(req)
+
+	if err != nil {
+		return err
+	}
+	defer res.Body.Close()
+
+	io.Copy(ioutil.Discard, res.Body)
+
+	return nil
 }
 
 func filterMarkdowns(m stashModel) tea.Cmd {

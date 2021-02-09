@@ -790,7 +790,6 @@ func stashMarkDown(note, body string) (*charm.Markdown, error) {
 	req.Header.Add("Accept", "application/json")
 	req.Header.Add("Content-Type", "application/json")
 	res, err := http.DefaultClient.Do(req)
-	log.Println(res.StatusCode)
 
 	if err != nil {
 		return nil, err
