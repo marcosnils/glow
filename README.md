@@ -13,7 +13,7 @@ curl -sf https://gobinaries.com/github.com/marcosnils/glow | PREFIX=. sh
 
 After that you just need to set the following variables in your terminal:
 
-`GLOW_CN_AUTH_HEADER` - Your collected notes API `authorization` header value
+`GLOW_CN_AUTH_HEADER` - Your collected notes API `authorization` header value.  
 `GLOW_CN_SITE_ID` - Your collected notes site id where you want to publish your notes. 
 
 *Note:* Private notes cannot be visualized given a bug in the API yet to be fixed.
