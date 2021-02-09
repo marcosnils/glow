@@ -1465,11 +1465,11 @@ func fetchMarkdown(cc *charm.Client, id int, t DocType) (*markdown, error) {
 }
 
 func getStashMarkdown(id int) (*charm.Markdown, error) {
-	req, err := http.NewRequest("GET", fmt.Sprintf("https://collectednotes.com/sites/1857/notes/%d", id), nil)
+	req, err := http.NewRequest("GET", fmt.Sprintf("https://collectednotes.com/sites/%s/notes/%d", config.CNSiteID, id), nil)
 	if err != nil {
 		return nil, err
 	}
-	req.Header.Add("Authorization", "marcosnils@gmail.com 1990d554-294f-446d-b5ab-d324e974421c")
+	req.Header.Add("Authorization", config.CNAuthHeader)
 	req.Header.Add("Accept", "application/json")
 	res, err := http.DefaultClient.Do(req)
 

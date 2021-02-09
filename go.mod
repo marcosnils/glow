@@ -25,4 +25,4 @@ require (
 	golang.org/x/text v0.3.2
 )
 
-replace github.com/charmbracelet/glow => github.com/marcosnils/glow v1.5.0
+replace github.com/charmbracelet/glow => ./
