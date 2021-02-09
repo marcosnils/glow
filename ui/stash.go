@@ -1,10 +1,12 @@
 package ui
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 	"io/ioutil"
 	"log"
+	"net/http"
 	"sort"
 	"strings"
 	"time"
@@ -1445,7 +1447,7 @@ func fetchMarkdown(cc *charm.Client, id int, t DocType) (*markdown, error) {
 
 	switch t {
 	case StashedDoc, ConvertedDoc:
-		md, err = cc.GetStashMarkdown(id)
+		md, err = getStashMarkdown(id)
 	case NewsDoc:
 		md, err = cc.GetNewsMarkdown(id)
 	default:
@@ -1460,6 +1462,42 @@ func fetchMarkdown(cc *charm.Client, id int, t DocType) (*markdown, error) {
 		docType:  t,
 		Markdown: *md,
 	}, nil
+}
+
+func getStashMarkdown(id int) (*charm.Markdown, error) {
+	req, err := http.NewRequest("GET", fmt.Sprintf("https://collectednotes.com/sites/1857/notes/%d", id), nil)
+	if err != nil {
+		return nil, err
+	}
+	req.Header.Add("Authorization", "marcosnils@gmail.com 1990d554-294f-446d-b5ab-d324e974421c")
+	req.Header.Add("Accept", "application/json")
+	res, err := http.DefaultClient.Do(req)
+
+	if err != nil {
+		return nil, err
+	}
+	defer res.Body.Close()
+
+	var note struct {
+		Id        int
+		Body      string
+		CreatedAt time.Time
+		Title     string
+	}
+
+	err = json.NewDecoder(res.Body).Decode(&note)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &charm.Markdown{
+		ID:        note.Id,
+		Note:      note.Title,
+		Body:      note.Body,
+		CreatedAt: note.CreatedAt,
+	}, nil
+
 }
 
 // Delete a markdown from a slice of markdowns.

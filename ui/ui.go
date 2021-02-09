@@ -1,10 +1,12 @@
 package ui
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 	"io/ioutil"
 	"log"
+	"net/http"
 	"os"
 	"path/filepath"
 	"strings"
@@ -589,7 +591,7 @@ func loadStash(m stashModel) tea.Cmd {
 			}
 			return stashLoadErrMsg{err}
 		}
-		stash, err := m.common.cc.GetStash(m.serverPage)
+		stash, err := getStash(m.serverPage)
 		if err != nil {
 			if debug {
 				if _, ok := err.(charm.ErrAuthFailed); ok {
@@ -605,6 +607,48 @@ func loadStash(m stashModel) tea.Cmd {
 		}
 		return gotStashMsg(stash)
 	}
+}
+
+func getStash(page int) ([]*charm.Markdown, error) {
+	req, err := http.NewRequest("GET", fmt.Sprintf("https://collectednotes.com/sites/%s/notes?page=%d", config.CNSiteID, page), nil)
+	if err != nil {
+		return nil, err
+	}
+	req.Header.Add("Authorization", config.CNAuthHeader)
+	req.Header.Add("Accept", "application/json")
+	res, err := http.DefaultClient.Do(req)
+
+	if err != nil {
+		return nil, err
+	}
+	defer res.Body.Close()
+
+	var notesRes []struct {
+		Id        int
+		Body      string
+		CreatedAt time.Time
+		Title     string
+	}
+
+	err = json.NewDecoder(res.Body).Decode(&notesRes)
+
+	if err != nil {
+		return nil, err
+	}
+
+	var resp []*charm.Markdown
+
+	for _, n := range notesRes {
+
+		resp = append(resp, &charm.Markdown{
+			ID:        n.Id,
+			Note:      n.Title,
+			Body:      n.Body,
+			CreatedAt: n.CreatedAt,
+		})
+	}
+
+	return resp, nil
 }
 
 func loadNews(m stashModel) tea.Cmd {
@@ -713,7 +757,7 @@ func stashDocument(cc *charm.Client, md markdown) tea.Cmd {
 			}
 		}
 
-		newMd, err := cc.StashMarkdown(md.Note, md.Body)
+		newMd, err := stashMarkDown(md.Note, md.Body)
 		if err != nil {
 			if debug {
 				log.Println("error stashing document:", err)
@@ -730,6 +774,44 @@ func stashDocument(cc *charm.Client, md markdown) tea.Cmd {
 
 		return stashSuccessMsg(md)
 	}
+}
+
+func stashMarkDown(note, body string) (*charm.Markdown, error) {
+	// TODO uncomment this after fetching notes is available
+	//breader := strings.NewReader(fmt.Sprintf(`{"note": {"body": "%s", "visibility":"private"}}`, note))
+	breader := strings.NewReader(fmt.Sprintf(`{"note": {"body": "%s", "visibility":"%s"}}`, note, config.CNVisibility))
+
+	req, err := http.NewRequest("POST", fmt.Sprintf("https://collectednotes.com/sites/%s/notes", config.CNSiteID), breader)
+	if err != nil {
+		return nil, err
+	}
+	req.Header.Add("Authorization", config.CNAuthHeader)
+	req.Header.Add("Accept", "application/json")
+	req.Header.Add("Content-Type", "application/json")
+	res, err := http.DefaultClient.Do(req)
+	log.Println(res.StatusCode)
+
+	if err != nil {
+		return nil, err
+	}
+
+	defer res.Body.Close()
+
+	var noteRes struct {
+		Id        int
+		Body      string
+		CreatedAt time.Time
+		Title     string
+	}
+
+	err = json.NewDecoder(res.Body).Decode(&noteRes)
+
+	return &charm.Markdown{
+		ID:        noteRes.Id,
+		Note:      noteRes.Title,
+		Body:      noteRes.Title,
+		CreatedAt: noteRes.CreatedAt,
+	}, nil
 }
 
 func waitForStatusMessageTimeout(appCtx applicationContext, t *time.Timer) tea.Cmd {

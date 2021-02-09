@@ -18,6 +18,11 @@ type Config struct {
 	Logfile              string `env:"GLOW_LOGFILE"`
 	HighPerformancePager bool   `env:"GLOW_HIGH_PERFORMANCE_PAGER" default:"true"`
 	GlamourEnabled       bool   `env:"GLOW_ENABLE_GLAMOUR" default:"true"`
+
+	// Collected notes
+	CNSiteID     string `env:"GLOW_CN_SITE_ID"`
+	CNVisibility string `env:"GLOW_CN_VISIBLITY" default:"public"`
+	CNAuthHeader string `env:"GLOW_CN_AUTH_HEADER"`
 }
 
 func (c Config) showLocalFiles() bool {
